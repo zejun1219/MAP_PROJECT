@@ -1,4 +1,6 @@
-import 'package:flutter_application_1/user.dart'; // 确保这个路径正确，用户数据类文件
+import 'package:flutter_application_1/pages/contact_us.dart';
+import 'package:flutter_application_1/pages/home_page.dart';
+import 'package:flutter_application_1/user.dart';
 import 'package:flutter/material.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -16,7 +18,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Profile"),
-        backgroundColor: Colors.blue, // 将AppBar的背景色设置为蓝色
+        backgroundColor: Colors.blue,
       ),
       drawer: Drawer(
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -25,24 +27,39 @@ class _MyProfilePageState extends State<MyProfilePage> {
             const DrawerHeader(
                 child: Icon(Icons.settings_accessibility, size: 60)),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("HOME"),
+              leading: Icon(Icons.home),
+              title: Text("HOME"),
               onTap: () {
-                Navigator.pushNamed(context, '/homePage');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(user: widget.user)),
+                );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text("My Profile"),
+              leading: Icon(Icons.person),
+              title: Text("My Profile"),
               onTap: () {
-                Navigator.pushNamed(context, '/myProfilePage');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MyProfilePage(key: UniqueKey(), user: widget.user)),
+                );
               },
             ),
+            //
             ListTile(
-              leading: const Icon(Icons.phone),
-              title: const Text("CONTACT US"),
+              leading: Icon(Icons.phone),
+              title: Text("CONTACT US"),
               onTap: () {
-                Navigator.pushNamed(context, '/contactUsPage');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ContactUsPage(key: UniqueKey(), user: widget.user)),
+                );
               },
             ),
             ListTile(
@@ -58,11 +75,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: Color.fromARGB(255, 107, 166, 214), width: 4.0),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+          // decoration: BoxDecoration(
+          //   border: Border.all(
+          //       color: Color.fromARGB(255, 107, 166, 214), width: 4.0),
+          //   borderRadius: BorderRadius.circular(12.0),
+          // ),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(

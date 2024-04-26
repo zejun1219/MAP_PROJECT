@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/loginPage': (context) => LoginPage(),
         '/register': (context) => register(),
-        '/contactUsPage': (context) => ContactUsPage(),
+        //'/contactUsPage': (context) => ContactUsPage(user: user),
         '/resetPasswordPage': (context) => ResetPasswordPage(),
         //'/myProfilePage': (context) => MyProfilePage()
       },
@@ -39,6 +39,10 @@ class MyApp extends StatelessWidget {
             final User user = settings.arguments as User; // 从arguments中提取User参数
             return MaterialPageRoute(
                 builder: (context) => HomePage(user: user));
+          case '/contactUsPage':
+            final User user = settings.arguments as User; // 从arguments中提取User参数
+            return MaterialPageRoute(
+                builder: (context) => ContactUsPage(user: user));
           default:
             return null;
         }

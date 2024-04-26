@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/contact_us.dart';
 
 import 'package:flutter_application_1/pages/my_profile.dart';
 import 'package:flutter_application_1/user.dart';
@@ -41,11 +42,17 @@ class HomePage extends StatelessWidget {
               );
             },
           ),
+          //
           ListTile(
             leading: Icon(Icons.phone),
             title: Text("CONTACT US"),
             onTap: () {
-              Navigator.pushNamed(context, '/contactUsPage');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ContactUsPage(key: UniqueKey(), user: user)),
+              );
             },
           ),
           ListTile(
