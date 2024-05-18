@@ -4,7 +4,7 @@ import 'package:template01/components/open_dish_box.dart';
 import 'package:template01/models/dishes.dart';
 import 'package:template01/services/firestore.dart';
 import 'package:template01/user.dart';
-// import 'package:template01/open_dish_box.dart'; // 确保你已经导入了 open_dish_box.dart 文件
+// import 'package:template01/open_dish_box.dart'; // 确保你已经导入了 open_dish_box.dart 文件s
 
 class CURD extends StatefulWidget {
   const CURD({Key? key, required User user}) : super(key: key);
