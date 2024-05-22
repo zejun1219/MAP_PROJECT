@@ -3,18 +3,20 @@ import 'package:template01/components/dish_controllers.dart';
 import 'package:template01/components/open_dish_box.dart';
 import 'package:template01/models/dishes.dart';
 import 'package:template01/services/firestore.dart';
-import 'package:template01/user.dart';
+import 'package:template01/models/user.dart';
 // import 'package:template01/open_dish_box.dart'; // 确保你已经导入了 open_dish_box.dart 文件s
 
 class CURD extends StatefulWidget {
-  const CURD({Key? key, required User user}) : super(key: key);
+  final User? user;
+
+  const CURD({Key? key, this.user}) : super(key: key);
 
   @override
   State<CURD> createState() => _CURDState();
 }
 
 class _CURDState extends State<CURD> {
-  final firestoreService firestroeService = firestoreService();
+  final FirestoreService firestoreService = FirestoreService();
   final MyController _myCtrls = MyController();
   final OpenDishBox openDishBox = OpenDishBox(); // 创建一个 OpenDishBox 类的实例
 
@@ -27,7 +29,7 @@ class _CURDState extends State<CURD> {
         title: Text('Dishes'),
       ),
       body: StreamBuilder(
-        stream: firestroeService.getDishes(), // Listen to the dishes stream
+        stream: firestoreService.getDishes(), // Listen to the dishes stream
         builder: (BuildContext context, AsyncSnapshot<List<Dishes>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -45,7 +47,7 @@ class _CURDState extends State<CURD> {
                       : Icon(Icons
                           .fastfood), // Use a default icon if imageUrl is null or empty
                   title: Text(dish.name),
-                  subtitle: Text('Type: ${dish.type}, Price: ${dish.price}'),
+                  subtitle: Text('Type: ${dish.type}, Price: ${dish.price},Quantity: ${dish.quantity}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -61,7 +63,7 @@ class _CURDState extends State<CURD> {
                         icon: Icon(Icons.delete),
                         onPressed: () async {
                           print('Dish id is: ' + dish.id);
-                          await firestroeService.deleteDish(dish.id);
+                          await firestoreService.deleteDish(dish.id);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content:

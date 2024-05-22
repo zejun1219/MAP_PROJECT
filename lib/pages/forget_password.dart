@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:template01/pages/reset_password.dart';
+import 'package:template01/admin_pages/reset_password.dart';
+// import 'package:template01/pages/reset_password.dart';
 import 'package:template01/paragraph/my_textfield.dart';
 import 'package:template01/paragraph/my_button.dart';
-import 'register.dart';
-import 'package:template01/user.dart'; // 导入 reset_password.dart
+// import '../admin_pages/pages/register.dart';
+import 'package:template01/models/user.dart'; // 导入 reset_password.dart
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});

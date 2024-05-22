@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:template01/pages/contact_us.dart';
-import 'package:template01/pages/my_profile.dart';
-import 'package:template01/user.dart';
-import 'package:template01/pages/CURD.dart';
 import 'package:template01/pages/login.dart';
+import 'package:template01/pages/my_profile.dart';
+import 'package:template01/models/user.dart';
+import 'package:template01/admin_pages/CURD.dart';
+// import 'package:template01/pages/login.dart';
 
 
-class HomePage extends StatelessWidget {
+class AdminHome extends StatelessWidget {
   final User user;
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const AdminHome({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
       drawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         child: Column(children: [
+//? ------------drawer go to components --------------------------
           DrawerHeader(child: Icon(Icons.settings_accessibility, size: 60)),
           ListTile(
             leading: Icon(Icons.home),
@@ -28,7 +30,7 @@ class HomePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(user: user)),
+                MaterialPageRoute(builder: (context) => AdminHome(user: user)),
               );
             },
           ),
@@ -66,7 +68,10 @@ class HomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CURD(key: UniqueKey(), user: user)),
+                       //! previous code need user login 
+                        // CURD(key: UniqueKey(), user: user)),
+
+                        CURD(key: UniqueKey())),
               );
             },
           ),
@@ -74,7 +79,9 @@ class HomePage extends StatelessWidget {
             leading: Icon(Icons.logout),
             title: Text("Logout"),
             onTap: () {
-              Navigator.pushNamed(context, '/loginPage');
+               Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
             },
           )
         ]),

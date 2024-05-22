@@ -1,9 +1,14 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+// import 'package:template01/admin_pages/CURD.dart';
+// import 'package:template01/admin_pages/admin_page.dart';
+// import 'package:template01/cstm_pages/payment_page.dart';
 import 'package:template01/firebase_options.dart';
-import 'package:template01/pages/home_page.dart';
+import 'package:template01/models/cart_model.dart';
 import 'package:template01/pages/login.dart';
+import 'package:provider/provider.dart';
+
 
 
 void main() async {
@@ -15,7 +20,12 @@ void main() async {
     print('Failed to connect to Firebase: $error');
   });
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartModel(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,11 +33,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       //for now directly go to customers page
-      home: LoginPage(),
+      home:LoginPage(),
     );
   }
 }

@@ -1,9 +1,11 @@
+import 'package:template01/admin_pages/admin_page.dart';
 import 'package:template01/pages/contact_us.dart';
-import 'package:template01/pages/home_page.dart';
-import 'package:template01/pages/CURD.dart';
-import 'package:template01/user.dart';
+// import 'package:template01/pages/home_page.dart';
+// import 'package:template01/pages/CURD.dart';
+import 'package:template01/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:template01/pages/login.dart';
 
 class MyProfilePage extends StatefulWidget {
   final User user;
@@ -21,62 +23,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
       appBar: AppBar(
         title: const Text("My Profile"),
         backgroundColor: Colors.blue,
-      ),
-      drawer: Drawer(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        child: Column(
-          children: [
-            const DrawerHeader(
-                child: Icon(Icons.settings_accessibility, size: 60)),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("HOME"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(user: widget.user)),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text("My Profile"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MyProfilePage(key: UniqueKey(), user: widget.user)),
-                );
-              },
-            ),
-            //
-            ListTile(
-              leading: Icon(Icons.phone),
-              title: Text("CONTACT US"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ContactUsPage(key: UniqueKey(), user: widget.user)),
-                );
-              },
-            ),
-
-
-
-
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Logout"),
-              onTap: () {
-                Navigator.pushNamed(context, '/loginPage');
-              },
-            ),
-          ],
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

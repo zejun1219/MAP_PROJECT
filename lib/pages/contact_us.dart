@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:template01/pages/home_page.dart';
+import 'package:template01/admin_pages/admin_page.dart';
+// import 'package:template01/admin_pages/home_page.dart';
 import 'package:template01/pages/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:template01/user.dart';
+import 'package:template01/models/user.dart';
 
 class ContactUsPage extends StatelessWidget {
   final User user;
@@ -43,7 +44,7 @@ class ContactUsPage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(user: user)),
+                MaterialPageRoute(builder: (context) => AdminHome(user: user)),
               );
             },
           ),

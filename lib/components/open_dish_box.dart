@@ -9,13 +9,13 @@ import 'package:template01/services/firestore.dart';
 
 class OpenDishBox {
   String imageUrl = '';
-  final firestoreService firestroeService = firestoreService();
+  final FirestoreService firestroeService = FirestoreService();
   final MyController _myCtrls = MyController();
 
   bool? memberPrice; // Nullable bool for checkbox input
 
   void openDishBox(BuildContext context, {Dishes? dish}) {
-    _myCtrls.idController.text = dish?.id ?? '';
+    // _myCtrls.idController.text = dish?.id ?? '';
     _myCtrls.nameController.text = dish?.name ?? '';
     _myCtrls.typeController.text = dish?.type ?? '';
     _myCtrls.descriptionController.text = dish?.description ?? '';
@@ -33,11 +33,11 @@ class OpenDishBox {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: _myCtrls.idController,
-                decoration: InputDecoration(labelText: 'ID'),
-                enabled: dish == null, // Disable editing if updating
-              ),
+              // TextField(
+              //   controller: _myCtrls.idController,
+              //   decoration: InputDecoration(labelText: 'ID'),
+              //   enabled: dish == null, // Disable editing if updating
+              // ),
               TextField(
                 controller: _myCtrls.nameController,
                 decoration: InputDecoration(labelText: 'Name'),
@@ -99,12 +99,12 @@ class OpenDishBox {
           ElevatedButton(
             onPressed: () {
               // Validate ID field
-              if (_myCtrls.idController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please enter an ID')),
-                );
-                return;
-              }
+              // if (_myCtrls.idController.text.isEmpty) {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(content: Text('Please enter an ID')),
+              //   );
+              //   return;
+              // }
 
               // Validate quantity and price inputs
               int quantity;
@@ -130,34 +130,36 @@ class OpenDishBox {
               }
 
               if (dish == null) {
-  // Add dish if quantity and price are valid
-  firestroeService.addDish(
-    id: _myCtrls.idController.text,
-    name: _myCtrls.nameController.text,
-    type: _myCtrls.typeController.text,
-    description: _myCtrls.descriptionController.text,
-    image: _myCtrls.imageController.text,
-    price: price,
-    quantity: quantity,
-    size: int.parse(_myCtrls.sizeController.text),
-    memberPrice: memberPrice ?? false, // Provide a default value if memberPrice is null
-    imageUrl: imageUrl, // 新增的参数
-  );
-} else {
-  // Update dish if quantity and price are valid
-  firestroeService.updateDish(
-    id: dish.id,
-    name: _myCtrls.nameController.text,
-    type: _myCtrls.typeController.text,
-    description: _myCtrls.descriptionController.text,
-    image: _myCtrls.imageController.text,
-    price: price,
-    quantity: quantity,
-    size: int.parse(_myCtrls.sizeController.text),
-    memberPrice: memberPrice ?? false, // Provide a default value if memberPrice is null
-    imageUrl: imageUrl, // 新增的参数
-  );
-}
+                // Add dish if quantity and price are valid
+                firestroeService.addDish(
+                  id: _myCtrls.idController.text,
+                  name: _myCtrls.nameController.text,
+                  type: _myCtrls.typeController.text,
+                  description: _myCtrls.descriptionController.text,
+                  image: _myCtrls.imageController.text,
+                  price: price,
+                  quantity: quantity,
+                  size: int.parse(_myCtrls.sizeController.text),
+                  memberPrice: memberPrice ??
+                      false, // Provide a default value if memberPrice is null
+                  imageUrl: imageUrl, // 新增的参数
+                );
+              } else {
+                // Update dish if quantity and price are valid
+                firestroeService.updateDish(
+                  id: dish.id,
+                  name: _myCtrls.nameController.text,
+                  type: _myCtrls.typeController.text,
+                  description: _myCtrls.descriptionController.text,
+                  image: _myCtrls.imageController.text,
+                  price: price,
+                  quantity: quantity,
+                  size: int.parse(_myCtrls.sizeController.text),
+                  memberPrice: memberPrice ??
+                      false, // Provide a default value if memberPrice is null
+                  imageUrl: imageUrl, // 新增的参数
+                );
+              }
 
               // input cleaning
               _myCtrls.idController.clear();

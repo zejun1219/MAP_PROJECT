@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:template01/paragraph/my_textfield.dart';
 import 'package:template01/paragraph/my_button.dart';
-import 'Login.dart';
-import 'package:template01/user.dart';
+import 'package:template01/models/user.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   final User user;

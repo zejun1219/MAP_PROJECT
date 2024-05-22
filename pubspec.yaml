@@ -33,6 +33,7 @@ dependencies:
   google_fonts: ^3.0.1  # 使用最新版本
   url_launcher: ^6.0.20 # Use the latest version available
   intl: ^0.17.0  # Check for the latest version suitable for your needs
+  provider: ^6.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
