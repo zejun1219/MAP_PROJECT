@@ -90,6 +90,36 @@ class _PizzaPageState extends State<PizzaPage> {
     );
   }
 
+ void _showConfirmationAnimation() {
+    OverlayState? overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).size.height * 0.9,
+        width: MediaQuery.of(context).size.width,
+        child: Material(
+          color: Colors.transparent,
+          child: Align(
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              opacity: 1,
+              duration: Duration(seconds: 3),
+              child: Container(
+                height: 50,
+                color: Colors.green,
+                alignment: Alignment.center,
+                child: Text(
+                  'Item added to cart!',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    
   @override
   Widget build(BuildContext context) {
     return Scaffold(
