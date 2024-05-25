@@ -4,8 +4,7 @@ import 'package:template01/pages/login.dart';
 import 'package:template01/pages/my_profile.dart';
 import 'package:template01/models/user.dart';
 import 'package:template01/admin_pages/CURD.dart';
-// import 'package:template01/pages/login.dart';
-
+import 'package:template01/components/admin_page_com.dart'; // Import the component
 
 class AdminHome extends StatelessWidget {
   final User user;
@@ -19,73 +18,7 @@ class AdminHome extends StatelessWidget {
         title: Text("Home Page"),
         backgroundColor: Colors.blue,
       ),
-      drawer: Drawer(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        child: Column(children: [
-//? ------------drawer go to components --------------------------
-          DrawerHeader(child: Icon(Icons.settings_accessibility, size: 60)),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("HOME"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AdminHome(user: user)),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text("My Profile"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        MyProfilePage(key: UniqueKey(), user: user)),
-              );
-            },
-          ),
-          //
-          ListTile(
-            leading: Icon(Icons.phone),
-            title: Text("CONTACT US"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ContactUsPage(key: UniqueKey(), user: user)),
-              );
-            },
-          ),
-
-          ListTile(
-            leading: Icon(Icons.edit),
-            title: Text("CRUD"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                       //! previous code need user login 
-                        // CURD(key: UniqueKey(), user: user)),
-
-                        CURD(key: UniqueKey())),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text("Logout"),
-            onTap: () {
-               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-            },
-          )
-        ]),
-      ),
+      drawer: AdminPageCom(user: user), // Use the imported component here
       body: ListView(
         children: <Widget>[
           Container(
