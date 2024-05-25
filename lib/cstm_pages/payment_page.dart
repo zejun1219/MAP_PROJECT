@@ -5,10 +5,10 @@ import 'package:template01/models/orders.dart';
 import 'package:template01/models/shopping_cart.dart';
 import 'package:template01/models/user.dart';
 import 'package:template01/services/firestore.dart';
+import 'package:template01/components/payment_page_com.dart'; // 导入新文件
 
 class PaymentPage extends StatelessWidget {
-  final FirestoreService firestoreService =
-      FirestoreService(); // 创建一个 FirestoreService 的实例
+  final FirestoreService firestoreService = FirestoreService();
   final List<ShoppingCartItem> shoppingCartItems;
   final double totalPrice;
   final User user;
@@ -17,7 +17,7 @@ class PaymentPage extends StatelessWidget {
     Key? key,
     required this.shoppingCartItems,
     required this.totalPrice,
-    required this.user, // 添加这一行
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -66,7 +66,13 @@ class PaymentPage extends StatelessWidget {
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                _showPaymentSuccessDialog(context);
+                showPaymentSuccessDialog(
+                  context: context,
+                  firestoreService: firestoreService,
+                  user: user,
+                  shoppingCartItems: shoppingCartItems,
+                  totalPrice: totalPrice,
+                );
               },
               child: Text('Pay Now'),
             ),
@@ -109,45 +115,5 @@ class PaymentPage extends StatelessWidget {
       ],
     );
   }
-
-//? ------------payment dialog go to components --------------------------
-  void _showPaymentSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Payment Successful!'),
-          content: Text('Your payment was successful.'),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                // 删除所有属于当前用户的购物车项目
-                await firestoreService
-                    .deleteUserCartItems(user.username); // 使用实例变量调用方法
-
-                // 创建一个新的订单
-                String dishes =
-                    shoppingCartItems.map((item) => item.name).join(', ');
-                shoppingOrder order = shoppingOrder(
-                  username: user.username,
-                  amount: totalPrice,
-                  dishes: dishes,
-                  createDate: DateTime.now(),
-                );
-                await firestoreService.createOrder(order); // 使用实例变量调用方法
-
-                // 关闭对话框并导航到 CstmHome
-                Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => CustomerHome(user: user)),
-                );
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
+//update this part and move some codes to components file , payment_page_com.dart
