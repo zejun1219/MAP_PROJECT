@@ -13,7 +13,7 @@ import 'package:template01/cstm_pages/steak.dart';
 import 'package:template01/models/user.dart';
 import 'package:template01/pages/login.dart';
 import 'package:template01/pages/my_profile.dart';
-
+// customer manage products page
 class CustomerHome extends StatefulWidget {
   final User user; // 添加这一行
 
