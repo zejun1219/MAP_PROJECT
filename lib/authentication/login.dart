@@ -1,23 +1,17 @@
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:template01/admin_pages/admin_page.dart';
+import 'package:template01/authentication/AuthService.dart';
+import 'package:template01/authentication/register.dart';
+import 'package:template01/components/dish_controllers.dart';
 import 'package:template01/cstm_pages/cstm_home.dart';
-import 'package:template01/models/authService.dart';
 import 'package:template01/authentication/forget_password.dart';
 import 'package:template01/paragraph/my_textfield.dart';
 import 'package:template01/paragraph/my_button.dart';
-// import '../admin_pages/home_page.dart';
-import 'register.dart';
 import 'package:template01/models/user.dart';
-// import '../admin_pages/forget_password.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:template01/admin_pages/admin_page.dart';
-// import 'package:template01/pages/forget_password.dart';
-// import 'package:template01/paragraph/my_textfield.dart';
-// import 'package:template01/paragraph/my_button.dart';
-// import 'package:template01/models/user.dart';
-// import 'package:template01/auth_service.dart'; // 引入 AuthService
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,34 +22,79 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthService authService = AuthService(); // 实例化 AuthService
-
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final MyController _myCtrls = MyController();
   String errorMessage = '';
+  Users? guestUser;
+  void signUserIn() async {
+    String username = _myCtrls.usernameController.text;
+    String password = _myCtrls.passwordController.text;
 
-  void signUserIn() {
-    String username = usernameController.text.isEmpty ? 'guest' : usernameController.text;
-    String password = passwordController.text.isEmpty ? '123' : passwordController.text;
-
-    User? user = authService.authenticateUser(username, password);
-
-    if (user != null) {
-      if (user.role == 'ADMIN') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdminHome(user: user)),
+    try {
+      // Get the email associated with the username
+      Users? user = await authService.getUser(username);
+      if (user != null) {
+        // Sign in with Firebase Authentication
+        UserCredential userCredential =
+        await authService.auth.signInWithEmailAndPassword(
+          email: user.email,
+          password: password,
         );
+
+        if (user.role == 'ADMIN') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AdminHome(user: user)),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CustomerHome(user: user)),
+          );
+        }
       } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CustomerHome(user:user)),
-        );
+        setState(() {
+          errorMessage = 'Account does not exist, please register an account';
+        });
       }
-    } else {
+    } on FirebaseAuthException catch (e) {
+      print('Error: ${e.message}');
       setState(() {
-        errorMessage = 'Account does not exist, please register an account';
+        errorMessage = 'Failed to sign in: ${e.message}';
       });
     }
+  }
+
+  void signInAsGuest() async {
+    // 生成一个唯一的 "guest" 用户名
+    String guestUsername = 'Guest${Random().nextInt(100000)}';
+
+    // 创建一个新的 "guest" 用户
+    Users user = Users(
+      username: guestUsername,
+      password: '123',
+      phone: '',
+      email: '',
+      role: 'GUEST',
+      createDate: DateTime.now(),
+      updateDate: DateTime.now(),
+    );
+
+    // 将 "guest" 用户添加到 Firestore 数据库中
+    await authService.usersRef.doc(guestUsername).set({
+      'username': user.username,
+      'password': user.password,
+      'phone': user.phone,
+      'email': user.email,
+      'role': user.role,
+      'createDate': user.createDate,
+      'updateDate': user.updateDate,
+    });
+
+    // 导航到 CustomerHome 页面
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CustomerHome(user: user)),
+    );
   }
 
   @override
@@ -90,13 +129,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 50),
                 MyTextfield(
-                  controller: usernameController,
+                  controller: _myCtrls.usernameController,
                   hintText: 'username',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
                 MyTextfield(
-                  controller: passwordController,
+                  controller: _myCtrls.passwordController,
                   hintText: 'password',
                   obscureText: true,
                 ),
@@ -137,20 +176,40 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Don't have an account?"),
-                    const SizedBox(width: 4),
+
                     GestureDetector(
                       onTap: () {
-                       // Navigator.push(
-                          // context,
-                          // MaterialPageRoute(
-                          //   builder: (context) => RegisterPage(),
-                          // ),
-                       // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Register(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Sign up now",
+                        softWrap: true,
                         style: TextStyle(
                           color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: signInAsGuest, // 修改这一行
+                      child: const Text(
+                        "Sign in as a guest",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
                         ),
@@ -177,9 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400]),
+                        child: Divider(thickness: 0.5, color: Colors.grey[400]),
                       ),
                     ],
                   ),
@@ -194,7 +251,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),
+
+                const SizedBox(height: 10),
+
               ],
             ),
           ),
@@ -203,5 +262,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
