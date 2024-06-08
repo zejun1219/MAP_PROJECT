@@ -7,7 +7,7 @@ import 'package:template01/models/user.dart';
 import 'package:template01/components/cstm_drawer.dart';
 import 'package:template01/services/firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
-// modify cstm page
+// modify customer page
 class CustomerHome extends StatefulWidget {
   final Users user;
   const CustomerHome({
