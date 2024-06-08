@@ -1,23 +1,37 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:template01/cstm_pages/cstm_home.dart';
-import 'package:template01/models/orders.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';  //直接从flutter添加一个信用卡
+// import 'package:template01/cstm_pages/cstm_home.dart';
+// import 'package:template01/models/orders.dart';
 import 'package:template01/models/shopping_cart.dart';
 import 'package:template01/models/user.dart';
 import 'package:template01/services/firestore.dart';
-import 'package:template01/components/payment_page_com.dart'; // 导入新文件
+import 'package:template01/components/cstm_payment_box.dart';
+import 'package:template01/view_models/cart_view_model.dart';
+import 'package:template01/view_models/dish_view_model.dart';
+import 'package:template01/view_models/order_view_model.dart'; // 导入新文件
 
 class PaymentPage extends StatelessWidget {
-  final FirestoreService firestoreService = FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
+  final DishesViewModel _dishesViewModel = DishesViewModel();
+  final OrdersViewModel _ordersViewModel = OrdersViewModel();
+  final ShoppingCartViewModel shoppingCartViewModel;
   final List<ShoppingCartItem> shoppingCartItems;
   final double totalPrice;
-  final User user;
+  final Users user;
+
+  String cardNumber='1234 5678 9012 3456';       //新加的  信用卡的信息
+  String expiryDate='10/28';                    //新加的
+  String cardHolderName='Paul';                //新加的
+  String cvvCode = '123';                     //新加的
+  bool isCvvFocused = false;                //新加的
 
   PaymentPage({
     Key? key,
     required this.shoppingCartItems,
     required this.totalPrice,
     required this.user,
+    required this.shoppingCartViewModel,
   }) : super(key: key);
 
   @override
@@ -32,6 +46,16 @@ class PaymentPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+
+            CreditCardWidget(
+              cardNumber: cardNumber,
+              expiryDate: expiryDate,
+              cardHolderName: cardHolderName,
+              cvvCode: cvvCode,
+              showBackView: isCvvFocused,
+              onCreditCardWidgetChange: (p0){},
+            ),
+
             _buildTextField(
               label: 'Cardholder Name',
               hintText: 'Paul',
@@ -68,7 +92,10 @@ class PaymentPage extends StatelessWidget {
               onPressed: () {
                 showPaymentSuccessDialog(
                   context: context,
-                  firestoreService: firestoreService,
+                  dishesViewModel: _dishesViewModel,
+                  shoppingCartViewModel: shoppingCartViewModel,
+                  firestoreService: _firestoreService,
+                  ordersViewModel: _ordersViewModel,
                   user: user,
                   shoppingCartItems: shoppingCartItems,
                   totalPrice: totalPrice,
@@ -116,4 +143,3 @@ class PaymentPage extends StatelessWidget {
     );
   }
 }
-//update this part and move some codes to components file , payment_page_com.dart
