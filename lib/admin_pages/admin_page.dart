@@ -60,6 +60,7 @@ Beef Pizza''',
         backgroundColor: Colors.blue,
       ),
       drawer: AdminPageCom(user: user), // Use the imported component here
+<<<<<<< HEAD
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,6 +190,16 @@ Beef Pizza''',
             ),
           ],
         ),
+=======
+      
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add action here, e.g., navigate to a shopping cart page
+          print('Navigate to shopping cart');
+        },
+        child: Icon(Icons.shopping_cart),
+        backgroundColor: Colors.orange,
+>>>>>>> origin/master
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
