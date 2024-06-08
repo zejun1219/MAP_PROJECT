@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:template01/authentication/AuthService.dart';
-import 'package:template01/authentication/login.dart';
-import 'package:template01/components/home_carrousel_links.dart';
+// import 'package:template01/authentication/AuthService.dart';
+// import 'package:template01/authentication/login.dart';
+// import 'package:template01/components/home_carrousel_links.dart';
+import 'package:template01/models/AuthService.dart';
 import 'package:template01/models/user.dart';
 import 'package:template01/components/cstm_drawer.dart';
 import 'package:template01/services/firestore.dart';
