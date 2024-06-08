@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:template01/authentication/AuthService.dart';
+import 'package:template01/authentication/login.dart';
+import 'package:template01/components/home_carrousel_links.dart';
 import 'package:template01/models/user.dart';
-import 'package:template01/components/cstm_home_com.dart';
+import 'package:template01/components/cstm_drawer.dart';
+import 'package:template01/services/firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomerHome extends StatefulWidget {
-  final User user;
-
+  final Users user;
   const CustomerHome({
     Key? key,
     required this.user,
@@ -16,81 +19,95 @@ class CustomerHome extends StatefulWidget {
 }
 
 class _CustomerHomeState extends State<CustomerHome> {
-  final List<String> images = [
-    'lib/images/Pine meat.jpeg',
-    'lib/images/durain.jpeg',
-    'lib/images/seafood.jpeg',
-    // 添加更多图片的 URL
-  ];
+  final AuthService authService = AuthService();
+  final FirestoreService _firestoreService = FirestoreService();
 
-  int _currentPage = 0;
-  late PageController _pageController;
+  Users? guestUser;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(
-      initialPage: _currentPage,
-      viewportFraction: 0.6, // 设置视口占比为0.6
+  void signOutGuest() async {
+    if (widget.user.role == 'GUEST') {
+      print('Signing out guest user: ${widget.user.username}');
+      await _firestoreService.deleteUserCartItems(widget.user.username);
+      await authService.signOutGuest(widget.user.username);
+    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
-    _startAutoPageChange();
   }
 
-  void _startAutoPageChange() {
-    Future.delayed(Duration(seconds: 3), () {
-      if (mounted) {
-        setState(() {
-          _currentPage = (_currentPage + 1) % images.length;
-          _pageController.animateToPage(
-            _currentPage,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-          _startAutoPageChange();
-        });
-      }
-    });
+  void _showPizzaDetails(String pizzaName, String description, String imagePath) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(pizzaName),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(imagePath),
+              SizedBox(height: 10),
+              Text(description),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  void _launchTwitter() async {
-    const url = 'https://twitter.com/utm_my';
+  Widget _buildStarRating(double rating) {
+    int fullStars = rating.floor();
+    bool halfStar = (rating - fullStars) >= 0.5;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        if (index < fullStars) {
+          return Icon(Icons.star, color: Colors.orange);
+        } else if (index == fullStars && halfStar) {
+          return Icon(Icons.star_half, color: Colors.orange);
+        } else {
+          return Icon(Icons.star_border, color: Colors.orange);
+        }
+      }),
+    );
+  }
+
+  Future<void> _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Could not launch $url';
     }
-  }
-
-  void _launchFacebook() async {
-    const url = 'https://www.facebook.com/univteknologimalaysia';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double cardWidth = MediaQuery.of(context).size.width * 0.9;
+    double cardHeight = 200;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Customer Home Page'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurple[200],
+        toolbarHeight: 80,
+
       ),
-      drawer: CustomDrawer(user: widget.user),
+      drawer: CustomDrawer(user: widget.user, onSignOutGuest: signOutGuest),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
             Text(
-              'Welcome to the Pizza House!',
+              'Welcome to PIZZARIA ！',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -98,77 +115,226 @@ class _CustomerHomeState extends State<CustomerHome> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              height: 200,
-              child: PageView.builder(
-                itemCount: images.length,
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Transform.scale(
-                    scale: index == _currentPage ? 1 : 0.8, // 当前页全尺寸，其他页缩小
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10), // 添加水平间距
-                      child: Image.asset(
-                        images[index],
-                        fit: BoxFit.cover, // 更改为 cover 以填满容器
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'We are delighted to serve you with the best pizzas in town. Our pizzas are made with love and fresh ingredients, ensuring a delightful experience with every bite.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Text(
-                'Explore our menu and enjoy your favorite pizza!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
-                ),
-              ),
-            ),
-            SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.alternate_email),
-                  color: Colors.blue,
-                  iconSize: 40,
-                  onPressed: _launchTwitter,
-                ),
-                IconButton(
-                  icon: Icon(Icons.facebook),
-                  color: Colors.blue,
-                  iconSize: 40,
-
-                  onPressed: _launchFacebook,
-                ),
+            CarouselAndSocialLinks(
+              images: [
+                'lib/images/table.jpg',
+                'lib/images/kitchen.png',
+                'lib/images/cooker.jpeg',
+                'lib/images/service.jpeg',
+                'lib/images/plate.jpg'
               ],
             ),
             SizedBox(height: 20),
+            Text(
+              'Discover our delicious range of pizzas, each crafted with care and the freshest ingredients. Our pizza is always with you. Enjoy it',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black, // 修改描述的颜色
+                fontWeight: FontWeight.bold, // 加粗文本
+              ),
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              onTap: () => _showPizzaDetails(
+                'Seafood Pizza',
+                'Delicious seafood pizza with cheese, topped with fresh shrimp, calamari, and scallops.',
+                'lib/images/seafood.jpeg',
+              ),
+              child: Card(
+                color: Colors.purple[50], // 设置卡片颜色为淡紫色
+                elevation: 4,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'lib/images/seafood.jpeg',
+                      width: cardWidth,
+                      height: cardHeight,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Seafood Pizza',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          _buildStarRating(4.5),
+                          Text(
+                            'Delicious seafood pizza with cheese',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              onTap: () => _showPizzaDetails(
+                'Durian Pizza',
+                'Unique durian pizza with a blend of sweet and savory flavors.!',
+                'lib/images/durain.jpeg',
+              ),
+              child: Card(
+                color: Colors.purple[50], // 设置卡片颜色为淡紫色
+                elevation: 4,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'lib/images/durain.jpeg',
+                      width: cardWidth,
+                      height: cardHeight,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Durian Pizza',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          _buildStarRating(4.5),
+                          Text(
+                            'Unique durian pizza with a blend of sweet and savory flavors.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              onTap: () => _showPizzaDetails(
+                'Pine Meat Pizza',
+                'Savory pizza topped with pineapple and various meats.',
+                'lib/images/Pine meat.jpeg',
+              ),
+              child: Card(
+                color: Colors.purple[50], // 设置卡片颜色为淡紫色
+                elevation: 4,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'lib/images/Pine meat.jpeg',
+                      width: cardWidth,
+                      height: cardHeight,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Pine Meat Pizza',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          _buildStarRating(4.0),
+                          Text(
+                            'Savory pizza topped with pineapple and various meats.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              onTap: () => _showPizzaDetails(
+                'Black Pepper Beef Pizza',
+                'Spicy pizza topped with black pepper beef and fresh vegetables.',
+                'lib/images/black pepper beef.jpeg',
+              ),
+              child: Card(
+                color: Colors.purple[50], // 设置卡片颜色为淡紫色
+                elevation: 4,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'lib/images/black pepper beef.jpeg',
+                      width: cardWidth,
+                      height: cardHeight,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Black Pepper Beef Pizza',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          _buildStarRating(5.0),
+                          Text(
+                            'Spicy pizza topped with black pepper beef and fresh vegetables.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: Icon(Icons.facebook),
+              onPressed: ()  {
+                ('https://www.facebook.com');
+
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.link),
+              onPressed: ()  {
+                ('https://www.twitter.com');
+
+              },
+            ),
           ],
         ),
       ),
     );
   }
 }
-
