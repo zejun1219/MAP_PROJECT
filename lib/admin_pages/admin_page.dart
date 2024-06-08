@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:template01/pages/contact_us.dart';
 import 'package:template01/authentication/login.dart';
 import 'package:template01/pages/my_profile.dart';
+=======
+>>>>>>> origin/master
 =======
 >>>>>>> origin/master
 import 'package:template01/models/user.dart';
@@ -61,6 +64,9 @@ Beef Pizza''',
       ),
       drawer: AdminPageCom(user: user), // Use the imported component here
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,6 +196,7 @@ Beef Pizza''',
             ),
           ],
         ),
+<<<<<<< HEAD
 =======
       
       floatingActionButton: FloatingActionButton(
@@ -200,11 +207,14 @@ Beef Pizza''',
         child: Icon(Icons.shopping_cart),
         backgroundColor: Colors.orange,
 >>>>>>> origin/master
+=======
+>>>>>>> origin/master
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
+<<<<<<< HEAD
 class ProductCard extends StatelessWidget {
   final String imagePath;
   final String name;
@@ -215,6 +225,9 @@ class ProductCard extends StatelessWidget {
   });
 
   @override
+=======
+@override
+>>>>>>> origin/master
   Widget build(BuildContext context) {
     return Container(
       width: 180,
@@ -249,3 +262,7 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
