@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template01/admin_pages/reset_password.dart';
+import 'package:template01/authentication/reset_password.dart';
 // import 'package:template01/pages/reset_password.dart';
 import 'package:template01/paragraph/my_textfield.dart';
 import 'package:template01/paragraph/my_button.dart';

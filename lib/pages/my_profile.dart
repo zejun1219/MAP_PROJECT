@@ -5,7 +5,7 @@ import 'package:template01/pages/contact_us.dart';
 import 'package:template01/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:template01/pages/login.dart';
+import 'package:template01/authentication/login.dart';
 
 class MyProfilePage extends StatefulWidget {
   final User user;

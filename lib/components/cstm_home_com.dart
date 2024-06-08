@@ -9,7 +9,7 @@ import 'package:template01/cstm_pages/soup.dart';
 import 'package:template01/cstm_pages/stable_food.dart';
 import 'package:template01/cstm_pages/steak.dart';
 import 'package:template01/models/user.dart';
-import 'package:template01/pages/login.dart';
+import 'package:template01/authentication/login.dart';
 import 'package:template01/pages/my_profile.dart';
 
 class CustomDrawer extends StatelessWidget {

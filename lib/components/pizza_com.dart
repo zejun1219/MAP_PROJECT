@@ -6,7 +6,7 @@ import 'package:template01/cstm_pages/shopping_cart.dart';
 
 class ShoppingCartArea extends StatelessWidget {
   final FirestoreService firestoreService;
-  final User user;
+  final Users user;
 
   const ShoppingCartArea({
     Key? key,

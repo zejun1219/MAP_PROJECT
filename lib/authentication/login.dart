@@ -3,11 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:template01/admin_pages/admin_page.dart';
 import 'package:template01/cstm_pages/cstm_home.dart';
 import 'package:template01/models/authService.dart';
-import 'package:template01/pages/forget_password.dart';
+import 'package:template01/authentication/forget_password.dart';
 import 'package:template01/paragraph/my_textfield.dart';
 import 'package:template01/paragraph/my_button.dart';
 // import '../admin_pages/home_page.dart';
-import '../admin_pages/register.dart';
+import 'register.dart';
 import 'package:template01/models/user.dart';
 // import '../admin_pages/forget_password.dart';
 

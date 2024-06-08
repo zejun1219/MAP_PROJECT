@@ -6,7 +6,7 @@ import 'package:template01/models/user.dart';
 import 'package:template01/services/firestore.dart'; // Import the Dishes model
 // update pizza.dart 
 class PizzaPage extends StatefulWidget {
-    final User user; // 添加这一行
+    final Users user; // 添加这一行
 
   const PizzaPage({Key? key, required this.user}) : super(key: key); // 初始化 user
 

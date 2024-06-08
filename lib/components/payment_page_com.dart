@@ -8,7 +8,7 @@ import 'package:template01/cstm_pages/cstm_home.dart';
 void showPaymentSuccessDialog({
   required BuildContext context,
   required FirestoreService firestoreService,
-  required User user,
+  required Users user,
   required List<ShoppingCartItem> shoppingCartItems,
   required double totalPrice,
 }) {
