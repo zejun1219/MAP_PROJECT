@@ -91,4 +91,7 @@ Future<void> signOutGuest(String guestUsername) async {
   await usersRef.doc(guestUsername).delete();
 }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master

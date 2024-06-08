@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 class ShoppingCartItem {
   late String id; // Your defined ID attribute
   late String imageUrl;
   late String name;
   late double price;
   late int quantity;
-  late double totalPrice;
+  late double total;
   late String type;
   late String username;
 
@@ -16,7 +16,7 @@ class ShoppingCartItem {
     required this.name,
     required this.price,
     required this.quantity,
-    required this.totalPrice,
+    required this.total,
     required this.type,
     required this.username,
   });
@@ -24,12 +24,12 @@ class ShoppingCartItem {
   // Factory constructor to create a ShoppingCartItem object from a Firebase document snapshot
   factory ShoppingCartItem.fromMap(Map<String, dynamic> map) {
     return ShoppingCartItem(
-      id: map['id'], 
+      id: map['id'],
       imageUrl: map['imageUrl'] ?? '',
       name: map['name'] ?? '',
       price: (map['price'] ?? 0.0).toDouble(),
       quantity: (map['quantity'] ?? 0).toInt(),
-      totalPrice: (map['totalPrice'] ?? 0.0).toDouble(),
+      total: (map['totalPrice'] ?? 0.0).toDouble(),
       type: map['type'] ?? '',
       username: map['username'] ?? '',
     );

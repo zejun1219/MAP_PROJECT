@@ -16,12 +16,12 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
-void updateItemQuantity(ShoppingCartItem item, int quantity) {
-  int index = _items.indexWhere((i) => i.id == item.id);
-  if (index != -1) {
-    _items[index].quantity = quantity;
-    _items[index].totalPrice = _items[index].price * quantity;
-    notifyListeners();
+  void updateItemQuantity(ShoppingCartItem item, int quantity) {
+    int index = _items.indexWhere((i) => i.id == item.id);
+    if (index != -1) {
+      _items[index].quantity = quantity;
+      _items[index].total = _items[index].price * quantity;
+      notifyListeners();
+    }
   }
-}
 }
